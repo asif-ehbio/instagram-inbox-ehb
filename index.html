@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EHB | Instagram Inbox Vault v1.4</title>
+    <title>EHB | Instagram Inbox Vault v1.5</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -16,8 +16,6 @@
         .login-btn { padding: 12px 40px; background: var(--accent); border: none; border-radius: 30px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
 
         #main-ui { display: none; width: 100%; flex-direction: column; background: #000; min-height: 100vh; }
-        
-        /* 📸 Capture Area: Background is white to match Gmail/Insta */
         #capture-area { background: #fff; width: 100%; display: inline-block; vertical-align: top; }
         .editable { outline: none; border-bottom: 1px dashed transparent; }
 
@@ -32,24 +30,31 @@
         .search-row { margin: 10px 18px; padding: 12px 20px; background: var(--search-bg); border-radius: 40px; display: flex; justify-content: space-between; align-items: center; color: #444; font-size: 17px; }
         .profile-a { width: 32px; height: 32px; background: var(--profile-brown); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 15px; }
 
-        /* 📥 Mail Items - Precise Alignment */
-        .label-all { padding: 8px 22px; font-size: 13px; font-weight: bold; color: #5f6368; }
-        .mail-item { padding: 12px 18px 12px 22px; display: flex; align-items: flex-start; gap: 15px; border-bottom: 1px solid #f2f2f2; }
-        .insta-icon { width: 52px; height: 52px; flex-shrink: 0; }
+        /* 🛠️ "All Inboxes" - Flattened look */
+        .label-all { padding: 8px 22px; font-size: 12px; font-weight: 700; color: #5f6368; letter-spacing: 0.3px; }
+
+        /* 📥 Mail Items - New Structure for perfect alignment */
+        .mail-item { padding: 10px 18px 10px 22px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #f2f2f2; }
         
-        .mail-data { flex-grow: 1; min-width: 0; padding-top: 2px; } 
-        .name-row { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 2px; }
-        .name-row b { font-size: 18px; color: #202124; font-weight: 600; }
+        /* 🛠️ Smaller Logo */
+        .insta-icon { width: 42px; height: 42px; flex-shrink: 0; }
         
-        /* 🛠️ Time pushed to the far right */
-        .time-text { font-size: 14px; color: #202124; font-weight: 800; white-space: nowrap; margin-left: 10px; }
+        .mail-data { flex-grow: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; } 
         
-        .mid-line { font-weight: 700; font-size: 15px; color: #202124; margin-bottom: 3px; white-space: nowrap; }
-        .bottom-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .bottom-line { font-size: 14px; color: #5f6368; white-space: nowrap; overflow: hidden; }
+        .name-row { display: flex; justify-content: space-between; align-items: baseline; width: 100%; margin-bottom: 1px; }
+        /* 🛠️ Smaller Sender Name */
+        .name-row b { font-size: 16px; color: #202124; font-weight: 600; }
+        /* 🛠️ Smaller Time */
+        .time-text { font-size: 13px; color: #5f6368; font-weight: 700; white-space: nowrap; margin-left: 10px; }
         
-        /* 🛠️ Star pushed to the far right corner */
-        .star-icon { color: #bdc1c6; font-size: 20px; flex-shrink: 0; margin-left: 15px; }
+        /* 🛠️ Smaller Subject */
+        .mid-line { font-weight: 700; font-size: 14px; color: #202124; margin-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        /* 🛠️ Smaller Snippet & Visibility Fix (line-height) */
+        .bottom-line { font-size: 13px; color: #5f6368; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.4; }
+        
+        /* 🛠️ Centered Star */
+        .star-icon { color: #bdc1c6; font-size: 18px; flex-shrink: 0; margin-left: 10px; }
 
         .footer-action { padding: 20px; background: #000; width: 100%; box-sizing: border-box; }
         .save-btn { width: 100%; padding: 18px; background: var(--accent); border: none; border-radius: 35px; font-weight: bold; font-size: 16px; cursor: pointer; text-transform: uppercase; }
@@ -70,9 +75,9 @@
                 <div class="sb-right">
                     <div style="font-size: 17px; display: flex; gap: 5px;"><i class="fas fa-signal"></i> <i class="fas fa-wifi"></i></div>
                     <div class="bat-pill">
-                        <div id="fill" class="bat-fill" style="width: 36%;"></div>
+                        <div id="fill" class="bat-fill" style="width: 37%;"></div>
                         <div class="bat-text-wrap">
-                            <span id="perc" class="editable" contenteditable="true" oninput="updBat()">36</span>
+                            <span id="perc" class="editable" contenteditable="true" oninput="updBat()">37</span>
                             <i class="fas fa-bolt" style="font-size: 10px;"></i>
                         </div>
                     </div>
@@ -93,11 +98,9 @@
                         <span class="time-text editable" contenteditable="true">2:51 AM</span>
                     </div>
                     <div class="mid-line editable" contenteditable="true">Copyright report #762310232843014</div>
-                    <div class="bottom-row">
-                        <div class="bottom-line editable" contenteditable="true">Thanks for contacting us. Our technology re...</div>
-                        <i class="far fa-star star-icon"></i>
-                    </div>
+                    <div class="bottom-line editable" contenteditable="true">Thanks for contacting us. Our technology re...</div>
                 </div>
+                <i class="far fa-star star-icon"></i>
             </div>
 
             <div class="mail-item">
@@ -108,16 +111,14 @@
                         <span class="time-text editable" contenteditable="true">2:51 AM</span>
                     </div>
                     <div class="mid-line editable" contenteditable="true">Intellectual Property Report #76231023...</div>
-                    <div class="bottom-row">
-                        <div class="bottom-line editable" contenteditable="true">The Instagram Team received a report from...</div>
-                        <i class="far fa-star star-icon"></i>
-                    </div>
+                    <div class="bottom-line editable" contenteditable="true">The Instagram Team received a report from...</div>
                 </div>
+                <i class="far fa-star star-icon"></i>
             </div>
         </div>
 
         <div class="footer-action">
-            <button class="save-btn" onclick="save()">📸 SAVE INBOX SCREENSHOT (v1.4)</button>
+            <button class="save-btn" onclick="save()">📸 SAVE INBOX SCREENSHOT (v1.5)</button>
         </div>
     </div>
 
@@ -139,10 +140,9 @@
 
         function save() {
             const el = document.getElementById('capture-area');
-            // Using precise height capture to ensure it cuts exactly after last mail
             html2canvas(el, { scale: 3, useCORS: true, backgroundColor: '#ffffff' }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = 'Instagram-Inbox-Fixed.png';
+                link.download = 'Instagram-Inbox-V1.5.png';
                 link.href = canvas.toDataURL();
                 link.click();
             });
@@ -150,3 +150,4 @@
     </script>
 </body>
 </html>
+
